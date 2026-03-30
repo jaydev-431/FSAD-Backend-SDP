@@ -1,36 +1,47 @@
 package com.klef.sdp.sdpbackend.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+
 @Entity
-@Table(name="reports_table")
 public class Report {
-		
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id ;
-	@Column(nullable=false)
-	private String pollingStation;
-	public Citizen getCitizen() {
-		return citizen;
-	}
 
-	public void setCitizen(Citizen citizen) {
-		this.citizen = citizen;
-	}
+    @Id
+    @GeneratedValue
+    private Long id;
 
-	public Long getId() {
+    public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getIssueType() {
+		return issueType;
+	}
+
+	public void setIssueType(String issueType) {
+		this.issueType = issueType;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getPollingStation() {
@@ -41,28 +52,22 @@ public class Report {
 		this.pollingStation = pollingStation;
 	}
 
-	public String getIssueType() {
-		return IssueType;
+	public Observer getObserver() {
+		return observer;
 	}
 
-	public void setIssueType(String issueType) {
-		IssueType = issueType;
+	public void setObserver(Observer observer) {
+		this.observer = observer;
 	}
 
-	public String getReport() {
-		return report;
-	}
+	private String description;
+    private String issueType;
+    private String status;
 
-	public void setReport(String report) {
-		this.report = report;
-	}
+    private String pollingStation;
 
-	@Column(nullable=false)
-	private String IssueType;
-	@Column(nullable=false)
-	private String report;
-	
-	@ManyToOne
-	@JoinColumn(name="citizen_id")
-	private Citizen citizen;
+    @ManyToOne
+    private Observer observer;
+
+    // getters & setters
 }
