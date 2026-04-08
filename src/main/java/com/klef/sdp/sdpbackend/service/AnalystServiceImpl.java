@@ -1,47 +1,39 @@
-package com.klef.sdp.sdpbackend.service;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.klef.sdp.sdpbackend.entity.Analyst;
-import com.klef.sdp.sdpbackend.entity.Issue;
-import com.klef.sdp.sdpbackend.repository.AnalystRepository;
-import com.klef.sdp.sdpbackend.repository.IssueRepository;
-
-import java.util.List;
-
 @Service
 public class AnalystServiceImpl implements AnalystService {
 
-    @Autowired
-    private AnalystRepository analystRepository;
+    private final AnalystRepository analystRepository;
+    private final IssueRepository issueRepository;
 
-    @Autowired
-    private IssueRepository issueRepository;
-
-    @Override
-    public Analyst verifyAnalystLogin(String email, String pwd) {
-        Analyst a = analystRepository.findByEmail(email);
-        if (a != null && a.getPassword().equals(pwd)) {
-            return a;
-        }
-        return null;
+    public AnalystServiceImpl(AnalystRepository analystRepository,
+                              IssueRepository issueRepository) {
+        this.analystRepository = analystRepository;
+        this.issueRepository = issueRepository;
     }
 
+    // 🔐 Login
+    @Override
+    public Analyst verifyAnalystLogin(String email, String pwd) {
+        return analystRepository.findByEmailAndPassword(email, pwd);
+    }
+
+    // 📋 View all issues
     @Override
     public List<Issue> viewAllIssues() {
         return issueRepository.findAll();
     }
 
+    // ⚠️ View only pending problems
     @Override
     public List<Issue> viewAllProblems() {
-        return issueRepository.findAll(); // You can filter pending if needed
+        return issueRepository.findByStatus("PENDING");
     }
 
+    // ✅ Solve issue
     @Override
     public Issue solveIssue(Long id) {
         Issue issue = issueRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Issue not found"));
+                .orElseThrow(() -> new RuntimeException("Issue with ID " + id + " not found"));
+
         issue.setStatus("SOLVED");
         return issueRepository.save(issue);
     }
